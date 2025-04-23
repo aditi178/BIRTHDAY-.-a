@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Happy Birthday Bestie!</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #fceabb, #f8b500);
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    user-select: none;
+  }
+  .card {
+    background: #fff0f6;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(214, 51, 108, 0.5);
+    width: 400px;
+    padding: 30px;
+    text-align: center;
+    color: #d6336c;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  p {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    color: #6a1b4d;
+  }
+  .signature {
+    margin-top: 30px;
+    font-style: italic;
+    font-weight: bold;
+    color: #a0274a;
+  }
+  .cake-emoji {
+    font-size: 4rem;
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+  <div class="card" role="main" aria-label="Birthday card for bestie">
+    <h1>Happy Birthday, Bestie! 🎉🎂</h1>
+    <div class="cake-emoji">🎂🎉🎈</div>
+    <p>Wishing you a day filled with laughter, joy, and all the cake you can eat!</p>
+    <p>Thank you for being such an amazing friend. Here's to many more years of friendship and fun.</p>
+    <p class="signature">With love, Your Bestie 💖</p>
+  </div>
+  <div style="position: fixed; bottom: 20px; width: 100%; text-align: center;">
+    <button id="nextButton" style="
+      background-color: #d6336c;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      max-width: 400px;
+      width: 90%;
+    ">Next</button>
+  </div>
+  <script>
+    document.getElementById('nextButton').addEventListener('click', () => {
+      window.location.href = 'birthday_card_apps.html';
+    });
+  </script>
+</body>
+</html>

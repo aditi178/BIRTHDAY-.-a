@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Send a Message</title>
+<style>
+  body {
+    background: #fceabb;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    user-select: none;
+  }
+  #message-container {
+    width: 90vw;
+    max-width: 400px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(214, 51, 108, 0.5);
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+  }
+  h1 {
+    color: #d6336c;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  #messages {
+    flex: 1;
+    border: 1px solid #d6336c;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+    overflow-y: auto;
+    background: #fff0f6;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .message {
+    background: #d6336c;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+    align-self: flex-start;
+    animation: fadeIn 0.3s ease;
+  }
+  .message.user {
+    background: #6f42c1;
+    align-self: flex-end;
+  }
+  #input-area {
+    display: flex;
+  }
+  #message-input {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #d6336c;
+    border-radius: 15px 0 0 15px;
+    font-size: 1rem;
+    outline: none;
+  }
+  #send-button {
+    background-color: #d6336c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 0 15px 15px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #send-button:hover {
+    background-color: #a0274a;
+  }
+  #backButton {
+    margin-top: 15px;
+    background-color: #d6336c;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+  #backButton:hover {
+    background-color: #a0274a;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+  #typing-indicator {
+    font-style: italic;
+    color: #d6336c;
+    margin-bottom: 8px;
+    height: 20px;
+  }
+</style>
+</head>
+<body>
+  <div id="message-container" role="main" aria-label="Send a message to me">
+    <h1>Send a Message</h1>
+    <div id="messages" aria-live="polite" aria-relevant="additions"></div>
+    <div id="typing-indicator" aria-live="polite" aria-atomic="true"></div>
+    <div id="input-area">
+      <input type="text" id="message-input" placeholder="Type your message here" aria-label="Message input" />
+      <button id="send-button" aria-label="Send message">Send</button>
+    </div>
+    <button id="backButton">Back</button>
+  </div>
+
+<script>
+  const messagesDiv = document.getElementById('messages');
+  const messageInput = document.getElementById('message-input');
+  const sendButton = document.getElementById('send-button');
+  const backButton = document.getElementById('backButton');
+  const typingIndicator = document.getElementById('typing-indicator');
+
+  function addMessage(text, isUser = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    if (isUser) {
+      messageDiv.classList.add('user');
+    }
+    messageDiv.textContent = text;
+    messagesDiv.appendChild(messageDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  function botResponse(userText) {
+    typingIndicator.textContent = 'Typing...';
+    setTimeout(() => {
+      typingIndicator.textContent = '';
+      const lowerText = userText.toLowerCase();
+      const responses = {
+        default: [
+          "OMG, I'm sooo excited to celebrate with you! 🎉💕",
+          "Yay! Best birthday vibes coming your way! 💖🎂",
+          "Can't wait to party with you, bestie! 🎉💃"
+        ],
+        happy: [
+          "Aww, thank you babe! Happy birthday to my fave bestie! 🎂💖",
+          "Happy birthday, love! You're the best! 🎉😘",
+          "Yay! Birthday hugs and kisses! 💕🎈"
+        ],
+        cake: [
+          "Yasss, cake is life! Can't wait to eat some with you! 🍰😍",
+          "Cake time! Let's get our sweet on! 🎂😋",
+          "I hope there's lots of frosting! Yum! 🍰💖"
+        ],
+        party: [
+          "Let's turn up and make this party lit! 🎉🔥",
+          "Party all night, bestie! 💃🎶",
+          "Time to dance and have fun! 🎉🕺"
+        ],
+        gift: [
+          "Omg, I hope you get the cutest gifts ever! 🎁💝",
+          "Gifts galore! You deserve the best! 🎀🎁",
+          "Can't wait to see what you get! So exciting! 🎉🎁"
+        ],
+        love: [
+          "Love you tons, bestie! You're the absolute best! 💕😘",
+          "You're my fave person ever! Love ya! 💖😍",
+          "Sending you all the love, bestie! 💕💫"
+        ],
+        thank: [
+          "You're welcome, babe! Always here for you! 💖",
+          "No prob, bestie! Anytime! 😊💕",
+          "Of course! Love helping you! 💖😘"
+        ]
+      };
+      let responseList = responses.default;
+      if (lowerText.includes('happy')) {
+        responseList = responses.happy;
+      } else if (lowerText.includes('cake')) {
+        responseList = responses.cake;
+      } else if (lowerText.includes('party')) {
+        responseList = responses.party;
+      } else if (lowerText.includes('gift')) {
+        responseList = responses.gift;
+      } else if (lowerText.includes('love')) {
+        responseList = responses.love;
+      } else if (lowerText.includes('thank')) {
+        responseList = responses.thank;
+      }
+      const response = responseList[Math.floor(Math.random() * responseList.length)];
+      addMessage(response);
+    }, 1500);
+  }
+
+  sendButton.addEventListener('click', () => {
+    const text = messageInput.value.trim();
+    if (text) {
+      addMessage(text, true);
+      messageInput.value = '';
+      messageInput.focus();
+      botResponse(text);
+    }
+  });
+
+  messageInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      sendButton.click();
+    }
+  });
+
+  backButton.addEventListener('click', () => {
+    window.history.back();
+  });
+</script>
+</body>
+</html>

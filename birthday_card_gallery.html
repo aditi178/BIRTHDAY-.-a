@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Birthday Photo Gallery</title>
+  <style>
+  body {
+    background: #fceabb;
+    font-family: 'Nanum Pen Script', cursive, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 {
+    color: #d6336c;
+    margin-bottom: 20px;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 2.5rem;
+  }
+  #gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    width: 100%;
+    max-width: 360px;
+    background: #fff0f6;
+    padding: 25px;
+    border-radius: 25px;
+    box-shadow: 0 8px 25px rgba(214, 51, 108, 0.4);
+  }
+  .photo-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(214, 51, 108, 0.6);
+    width: 140px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    transform: rotate(-3deg);
+    transition: transform 0.3s ease;
+    font-family: 'Nanum Pen Script', cursive;
+  }
+  .photo-card:nth-child(even) {
+    transform: rotate(3deg);
+  }
+  .photo-card:hover {
+    transform: rotate(0deg) scale(1.1);
+    z-index: 10;
+  }
+  .photo-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(214, 51, 108, 0.5);
+  }
+  .caption {
+    margin-top: 10px;
+    color: #d6336c;
+    font-weight: 700;
+    text-align: center;
+    font-size: 1.2rem;
+  }
+  #backButton {
+    margin-top: 25px;
+    background-color: #d6336c;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    max-width: 360px;
+    width: 90%;
+  }
+  #backButton:hover {
+    background-color: #a0274a;
+  }
+</style>
+</head>
+<body>
+  <h1>Photo Gallery</h1>
+  <div id="gallery" aria-label="Birthday photo gallery">
+      <div class="photo-card" role="listitem">
+        <img src="WhatsApp Image 2025-04-15 at 14.38.18.jpeg" alt="Bestie at the beach" />
+        <div class="caption">Bestie at the beach</div>
+      </div>
+      <div class="photo-card" role="listitem">
+        <img src="WhatsApp Image 2025-04-15 at 14.38.19.jpeg" alt="Birthday party fun" />
+        <div class="caption">Birthday party fun</div>
+      </div>
+      <div class="photo-card" role="listitem">
+        <img src="WhatsApp Image 2025-04-15 at 14.38.20.jpeg" alt="Laughing together" />
+        <div class="caption">Laughing together</div>
+      </div>
+      <div class="photo-card" role="listitem">
+        <img src="WhatsApp Image 2025-04-15 at 14.38.21.jpeg" alt="Best friends forever" />
+        <div class="caption">Best friends forever</div>
+      </div>
+      <div class="photo-card" role="listitem">
+        <img src="WhatsApp Image 2025-04-15 at 14.38.22.jpeg" alt="Celebration time" />
+        <div class="caption">Celebration time</div>
+      </div>
+  </div>
+  <button id="backButton">Back</button>
+  <script>
+    document.getElementById('backButton').addEventListener('click', () => {
+      window.history.back();
+    });
+  </script>
+</body>
+</html>

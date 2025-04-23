@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Birthday Card Enhanced</title>
+<style>
+  body {
+    background: #fceabb;
+    font-family: 'Georgia', serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    user-select: none;
+    flex-direction: column;
+  }
+  #cake-game, #mobile-structure {
+    width: 320px;
+    height: 480px;
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    overflow: hidden;
+    position: relative;
+  }
+  #cake-game {
+    display: block;
+  }
+  #mobile-structure {
+    display: none;
+    flex-direction: column;
+  }
+  #game-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: #fff0f6;
+    border: 2px dashed #d6336c;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #plate {
+    position: absolute;
+    bottom: 10px;
+    width: 120px;
+    height: 40px;
+    background: #d6336c;
+    border-radius: 60px 60px 20px 20px;
+    left: 100px;
+    transition: left 0.1s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    user-select: none;
+    cursor: pointer;
+  }
+  .cake {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    font-size: 48px;
+    user-select: none;
+  }
+  #scoreboard {
+    font-size: 1.3rem;
+    color: #d6336c;
+    margin: 10px 0;
+    text-align: center;
+  }
+  #game-over {
+    font-size: 1.5rem;
+    color: #28a745;
+    font-weight: bold;
+    display: none;
+    text-align: center;
+    margin-top: 10px;
+  }
+  #instructions {
+    font-size: 1rem;
+    color: #6a1b4d;
+    margin: 10px 0 20px 0;
+    text-align: center;
+  }
+  #next-btn {
+    background-color: #d6336c;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px auto;
+    display: block;
+    transition: background-color 0.3s ease;
+  }
+  #next-btn:hover {
+    background-color: #a0274a;
+  }
+  /* Mobile-like structure styles */
+  #mobile-structure {
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  #mobile-header {
+    background-color: #d6336c;
+    color: white;
+    padding: 15px;
+    border-radius: 20px 20px 0 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  #mobile-content {
+    background: #fff0f6;
+    height: 380px;
+    border-radius: 0 0 20px 20px;
+    padding: 15px;
+    overflow-y: auto;
+    color: #6a1b4d;
+    font-size: 1rem;
+  }
+</style>
+</head>
+<body>
+  <div id="cake-game" aria-label="Cake catcher game">
+    <div id="game-container" aria-label="Cake Catcher game area" tabindex="0">
+      <div id="plate" aria-label="Plate to catch cakes">Next</div>
+    </div>
+    <div id="scoreboard">Score: 0</div>
+    <div id="game-over">Congratulations! You caught 20 cakes! Happy Birthday! 🎉🎉🎉</div>
+    <div id="instructions">Use left and right arrow keys to move the plate and catch the cakes.</div>
+  </div>
+
+  <div id="mobile-structure" aria-label="Mobile like birthday message structure">
+    <div id="mobile-header">Birthday Diary</div>
+    <div id="mobile-content">
+      <h2>Dear Bestie,</h2>
+      <p>Wishing you a day filled with happiness and a year filled with joy. May all your dreams come true!</p>
+      <p>Thank you for being such an amazing friend. Here's to many more birthdays and memories together.</p>
+      <p>Love always,</p>
+      <p><em>Your Bestie</em></p>
+      <p>Enjoy your special day with lots of cake and laughter! 🎉🎂</p>
+    </div>
+  </div>
+
+<script>
+  const gameContainer = document.getElementById('game-container');
+  const plate = document.getElementById('plate');
+  const scoreboard = document.getElementById('scoreboard');
+  const gameOver = document.getElementById('game-over');
+  const nextBtn = plate;
+  const cakeGame = document.getElementById('cake-game');
+  const mobileStructure = document.getElementById('mobile-structure');
+
+  const gameWidth = gameContainer.clientWidth;
+  const gameHeight = gameContainer.clientHeight;
+  const plateWidth = plate.clientWidth;
+
+  let plateX = (gameWidth - plateWidth) / 2;
+  let score = 0;
+  let cakes = [];
+  let gameInterval;
+  let cakeFallInterval;
+  let isGameOver = false;
+
+  // Array of cake and dessert emojis for variety
+  const cakeEmojis = ['🎂', '🍰', '🧁', '🍩', '🍪'];
+
+  // Create a cake element (using emoji)
+  function createCake() {
+    if (isGameOver) {
+      console.error('Game is over. Cannot create more cakes.');
+      return;
+    }
+    const cake = document.createElement('div');
+    cake.classList.add('cake');
+    // Randomly select an emoji from the array
+    cake.textContent = cakeEmojis[Math.floor(Math.random() * cakeEmojis.length)];
+    cake.style.left = Math.random() * (gameWidth - 60) + 'px';
+    cake.style.top = '0px';
+    gameContainer.appendChild(cake);
+    cakes.push(cake);
+  }
+
+  // Move cakes down
+  function moveCakes() {
+    cakes.forEach((cake, index) => {
+      let top = parseFloat(cake.style.top);
+      top += 4; // fall speed
+      cake.style.top = top + 'px';
+
+      // Check if cake is caught by plate
+      if (
+        top + 40 >= gameHeight - 50 &&
+        parseFloat(cake.style.left) + 40 > plateX &&
+        parseFloat(cake.style.left) < plateX + plateWidth
+      ) {
+        // Remove cake and increase score
+        gameContainer.removeChild(cake);
+        cakes.splice(index, 1);
+        score++;
+        scoreboard.textContent = 'Score: ' + score;
+        if (score >= 20) {
+          endGame();
+        }
+      } else if (top > gameHeight) {
+        // Remove cake if it falls beyond game area
+        gameContainer.removeChild(cake);
+        cakes.splice(index, 1);
+      }
+    });
+  }
+
+  // Game loop
+  function gameLoop() {
+    if (!isGameOver) {
+      moveCakes();
+    }
+  }
+
+  // End game
+  function endGame() {
+    isGameOver = true;
+    gameOver.style.display = 'block';
+    clearInterval(gameInterval);
+    clearInterval(cakeFallInterval);
+  }
+
+  // Handle keyboard input
+  function handleKeyDown(e) {
+    if (isGameOver) return;
+    if (e.key === 'ArrowLeft') {
+      plateX = Math.max(0, plateX - 30);
+      plate.style.left = plateX + 'px';
+    } else if (e.key === 'ArrowRight') {
+      plateX = Math.min(gameWidth - plateWidth, plateX + 30);
+      plate.style.left = plateX + 'px';
+    }
+  }
+
+  // Start the game
+  function startGame() {
+    gameInterval = setInterval(gameLoop, 30);
+    cakeFallInterval = setInterval(() => {
+      if (!isGameOver) createCake();
+    }, 1000);
+  }
+
+  // Next button click handler
+  nextBtn.addEventListener('click', () => {
+    cakeGame.style.display = 'none';
+    mobileStructure.style.display = 'flex';
+  });
+
+  // Initialize
+  gameContainer.focus();
+  window.addEventListener('keydown', handleKeyDown);
+  startGame();
+</script>
+</body>
+</html>

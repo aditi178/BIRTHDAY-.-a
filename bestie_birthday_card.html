@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Happy Birthday Bestie! - Cake Catcher Game</title>
+<style>
+  body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(135deg, #fceabb, #f8b500);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    user-select: none;
+  }
+  .card {
+    max-width: 700px;
+    margin: 30px auto;
+    background: #fff0f6;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    padding: 20px;
+    text-align: center;
+  }
+  h1 {
+    color: #d6336c;
+    margin-bottom: 10px;
+  }
+  p.message {
+    font-size: 1.2rem;
+    color: #6a1b4d;
+    margin-bottom: 20px;
+  }
+  #game-container {
+    position: relative;
+    width: 600px;
+    height: 400px;
+    margin: 0 auto 20px;
+    background: #fff0f6;
+    border: 2px dashed #d6336c;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #plate {
+    position: absolute;
+    bottom: 10px;
+    width: 120px;
+    height: 40px;
+    background: #d6336c;
+    border-radius: 60px 60px 20px 20px;
+    left: 240px;
+    transition: left 0.1s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    user-select: none;
+  }
+  .cake {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    font-size: 48px;
+    user-select: none;
+  }
+  #scoreboard {
+    font-size: 1.3rem;
+    color: #d6336c;
+    margin-bottom: 10px;
+  }
+  #game-over {
+    font-size: 1.5rem;
+    color: #28a745;
+    font-weight: bold;
+    display: none;
+  }
+  #instructions {
+    font-size: 1rem;
+    color: #6a1b4d;
+    margin-bottom: 15px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Happy Birthday, Bestie! 🎉🎂</h1>
+    <p class="message">Catch the falling cakes with your plate! Use left and right arrow keys to move.</p>
+    <div id="game-container" aria-label="Cake Catcher game area" tabindex="0">
+      <div id="plate" aria-label="Plate to catch cakes"></div>
+    </div>
+    <div id="scoreboard">Score: 0</div>
+    <div id="game-over">Congratulations! You caught 20 cakes! Happy Birthday! 🎉🎉🎉</div>
+    <div id="instructions">Use left and right arrow keys to move the plate and catch the cakes.</div>
+  </div>
+
+<script>
+  const gameContainer = document.getElementById('game-container');
+  const plate = document.getElementById('plate');
+  const scoreboard = document.getElementById('scoreboard');
+  const gameOver = document.getElementById('game-over');
+
+  const gameWidth = gameContainer.clientWidth;
+  const gameHeight = gameContainer.clientHeight;
+  const plateWidth = plate.clientWidth;
+
+  let plateX = (gameWidth - plateWidth) / 2;
+  let score = 0;
+  let cakes = [];
+  let gameInterval;
+  let cakeFallInterval;
+  let isGameOver = false;
+
+  // Array of cake and dessert emojis for variety
+  const cakeEmojis = ['🎂', '🍰', '🧁', '🍩', '🍪'];
+
+  // Create a cake element (using emoji)
+  function createCake() {
+    if (isGameOver) {
+      console.error('Game is over. Cannot create more cakes.');
+      return;
+    }
+    const cake = document.createElement('div');
+    cake.classList.add('cake');
+    // Randomly select an emoji from the array
+    cake.textContent = cakeEmojis[Math.floor(Math.random() * cakeEmojis.length)];
+    cake.style.left = Math.random() * (gameWidth - 60) + 'px';
+    cake.style.top = '0px';
+    gameContainer.appendChild(cake);
+    cakes.push(cake);
+  }
+
+  // Move cakes down
+  function moveCakes() {
+    cakes.forEach((cake, index) => {
+      let top = parseFloat(cake.style.top);
+      top += 4; // fall speed
+      cake.style.top = top + 'px';
+
+      // Check if cake is caught by plate
+      if (
+        top + 40 >= gameHeight - 50 &&
+        parseFloat(cake.style.left) + 40 > plateX &&
+        parseFloat(cake.style.left) < plateX + plateWidth
+      ) {
+        // Remove cake and increase score
+        gameContainer.removeChild(cake);
+        cakes.splice(index, 1);
+        score++;
+        scoreboard.textContent = 'Score: ' + score;
+        if (score >= 20) {
+          endGame();
+        }
+      } else if (top > gameHeight) {
+        // Remove cake if it falls beyond game area
+        gameContainer.removeChild(cake);
+        cakes.splice(index, 1);
+      }
+    });
+  }
+
+  // Game loop
+  function gameLoop() {
+    if (!isGameOver) {
+      moveCakes();
+    }
+  }
+
+  // End game
+  function endGame() {
+    isGameOver = true;
+    gameOver.style.display = 'block';
+    clearInterval(gameInterval);
+    clearInterval(cakeFallInterval);
+  }
+
+  // Handle keyboard input
+  function handleKeyDown(e) {
+    if (isGameOver) return;
+    if (e.key === 'ArrowLeft') {
+      plateX = Math.max(0, plateX - 30);
+      plate.style.left = plateX + 'px';
+    } else if (e.key === 'ArrowRight') {
+      plateX = Math.min(gameWidth - plateWidth, plateX + 30);
+      plate.style.left = plateX + 'px';
+    }
+  }
+
+  // Start the game
+  function startGame() {
+    gameInterval = setInterval(gameLoop, 30);
+    cakeFallInterval = setInterval(() => {
+      if (!isGameOver) createCake();
+    }, 1000);
+  }
+  
+  // Add "Next" text to the plate (pink button)
+  plate.textContent = 'Next';
+
+  // Remove diary feature if any
+  // Make plate clickable to navigate to next page
+  plate.style.cursor = 'pointer';
+  plate.addEventListener('click', () => {
+    window.location.href = 'bestie_birthday_card_enhanced.html';
+  });
+
+  // Initialize
+  gameContainer.focus();
+  window.addEventListener('keydown', handleKeyDown);
+  startGame();
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Birthday Photobooth</title>
+<style>
+  body {
+    background: #fceabb;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 {
+    color: #d6336c;
+    margin-bottom: 20px;
+  }
+  #camera {
+    width: 320px;
+    height: 240px;
+    background: black;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(214, 51, 108, 0.3);
+  }
+  #captureButton {
+    margin-top: 15px;
+    background-color: #d6336c;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #captureButton:hover {
+    background-color: #a0274a;
+  }
+  #photos {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+  }
+  .photo {
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(214, 51, 108, 0.3);
+    overflow: hidden;
+  }
+  .photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  #backButton {
+    margin-top: 20px;
+    background-color: #d6336c;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    max-width: 600px;
+    width: 90%;
+  }
+  #backButton:hover {
+    background-color: #a0274a;
+  }
+</style>
+</head>
+<body>
+  <h1>Birthday Photobooth</h1>
+  <video id="camera" autoplay playsinline></video>
+  <button id="captureButton">Capture Photo</button>
+  <div id="photos" aria-label="Captured photos"></div>
+  <button id="backButton">Back</button>
+
+  <script>
+    const video = document.getElementById('camera');
+    const captureButton = document.getElementById('captureButton');
+    const photosDiv = document.getElementById('photos');
+    const backButton = document.getElementById('backButton');
+
+    // Access the device camera and stream to video element
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+      } catch (err) {
+        alert('Error accessing camera: ' + err.message);
+      }
+    }
+
+    // Capture photo from video stream
+    function capturePhoto() {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const img = document.createElement('img');
+      img.src = canvas.toDataURL('image/png');
+      const photoDiv = document.createElement('div');
+      photoDiv.classList.add('photo');
+      photoDiv.appendChild(img);
+      photosDiv.appendChild(photoDiv);
+    }
+
+    captureButton.addEventListener('click', capturePhoto);
+    backButton.addEventListener('click', () => {
+      window.history.back();
+    });
+
+    startCamera();
+  </script>
+</body>
+</html>

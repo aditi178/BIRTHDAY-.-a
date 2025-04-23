@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Birthday Card Apps</title>
+<style>
+  body {
+    background: #fceabb;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    user-select: none;
+  }
+  #mobile-container {
+    width: 360px;
+    height: 640px;
+    background: white;
+    border-radius: 40px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #header {
+    background-color: #d6336c;
+    color: white;
+    padding: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  #app-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fff0f6;
+  }
+  .app-icon {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(214, 51, 108, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    width: 60px;
+    height: 60px;
+  }
+  .app-icon:hover {
+    transform: scale(1.1);
+  }
+  .app-icon img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
+  }
+  .app-label {
+    font-size: 1rem;
+    color: #d6336c;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div id="mobile-container" role="main" aria-label="Mobile app layout for birthday card">
+    <div id="header">Birthday Apps</div>
+    <div id="app-grid">
+      <div class="app-icon" tabindex="0" role="button" aria-label="Photo Gallery app" id="galleryApp">
+        <img src="https://img.icons8.com/ios-filled/100/d6336c/picture.png" alt="Photo Gallery Icon" />
+        <div class="app-label">Gallery</div>
+      </div>
+      <div class="app-icon" tabindex="0" role="button" aria-label="Messages app" id="messagesApp">
+        <img src="https://img.icons8.com/ios-filled/100/d6336c/sms.png" alt="Messages Icon" />
+        <div class="app-label">Messages</div>
+      </div>
+      <div class="app-icon" tabindex="0" role="button" aria-label="Games app" id="gamesApp">
+        <img src="https://img.icons8.com/ios-filled/100/d6336c/game-controller.png" alt="Games Icon" />
+        <div class="app-label">Games</div>
+      </div>
+      <div class="app-icon" tabindex="0" role="button" aria-label="Music app">
+        <img src="https://img.icons8.com/ios-filled/100/d6336c/musical-notes.png" alt="Music Icon" />
+        <div class="app-label">Music</div>
+      </div>
+      <div class="app-icon" tabindex="0" role="button" aria-label="Calendar app">
+        <img src="https://img.icons8.com/ios-filled/100/d6336c/calendar.png" alt="Calendar Icon" />
+        <div class="app-label">Calendar</div>
+      </div>
+      <div class="app-icon" tabindex="0" role="button" aria-label="Settings app">
+        <img src="https://img.icons8.com/ios-filled/100/d6336c/settings.png" alt="Settings Icon" />
+        <div class="app-label">Settings</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('gamesApp').addEventListener('click', () => {
+      window.location.href = 'birthday_card_new_game.html';
+    });
+    document.getElementById('messagesApp').addEventListener('click', () => {
+      window.location.href = 'birthday_card_messages.html';
+    });
+    document.getElementById('galleryApp').addEventListener('click', () => {
+      window.location.href = 'birthday_card_gallery.html';
+    });
+  </script>
+</body>
+</html>
